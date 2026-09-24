@@ -4,10 +4,10 @@
   "description": "Mobile-first Alpine Sauber website with a native iOS feel, complete service content, and Framer Motion scroll storytelling.",
   "private": true,
   "scripts": {
-    "predev": "node scripts/sync-static-content.mjs",
+    "predev": "node scripts/sync-static-content.mjs && node scripts/generate-seo-pages.mjs --assets-only",
     "dev": "vite --host 0.0.0.0",
-    "prebuild": "node scripts/sync-static-content.mjs",
-    "build": "vite build && node scripts/copy-static-assets.mjs",
+    "prebuild": "node scripts/sync-static-content.mjs && node scripts/generate-seo-pages.mjs --assets-only",
+    "build": "vite build && node scripts/copy-static-assets.mjs && node scripts/generate-seo-pages.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "keywords": [],

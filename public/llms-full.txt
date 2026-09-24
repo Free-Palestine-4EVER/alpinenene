@@ -1,0 +1,77 @@
+# Alpine Sauber — Unternehmens- und Leistungsinformationen
+
+## Unternehmen: Alpine Sauber e.U.
+Professionelle Reinigungsleistungen für Privat- und Geschäftskunden in Graz, der Steiermark und Österreich.
+Standort: Eggenberger Gürtel 56b, 8020 Graz, Österreich.
+Telefon: +43 664 301 9017. E-Mail: office@alpinesauber.at.
+Erreichbarkeit laut Website: Montag bis Samstag, 08:00–18:00 Uhr.
+Tätigkeitsgebiet laut Website: Graz, Steiermark und Österreich.
+
+## Leistungen
+### Büroreinigung
+Kategorie: Büro & Gebäude.
+Sauberkeit, die Produktivität steigert. Ein sauberer und hygienischer Arbeitsplatz schafft nicht nur eine angenehme Atmosphäre, sondern fördert auch Gesundheit und Effizienz Ihrer Mitarbeiter. Wir bieten gründliche, zuverlässige und diskrete Reinigungsleistungen – individuell abgestimmt auf Ihre Anforderungen und Arbeitszeiten.
+Details: https://alpinesauber.at/buroreinigung/
+
+### Gebäudereinigung
+Kategorie: Büro & Gebäude.
+Ein gepflegtes Gebäude ist Ihre Visitenkarte. Alpine Sauber sorgt für dauerhafte Sauberkeit, Werterhalt und ein rundum gepflegtes Erscheinungsbild.
+Details: https://alpinesauber.at/gebaudereinigung/
+
+### Unterhaltsreinigung
+Kategorie: Büro & Gebäude.
+Mit Alpine Sauber erstrahlen Ihre Räume täglich in neuem Glanz. Ob Büro, Geschäft oder Praxis – wir sorgen für makellose Sauberkeit, Frische und Wohlbefinden.
+Details: https://alpinesauber.at/unterhaltsreinigung/
+
+### Treppenreinigung
+Kategorie: Büro & Gebäude.
+Ein gepflegtes Treppenhaus ist die Visitenkarte jeder Immobilie – es vermittelt Sauberkeit, Ordnung und Professionalität schon beim ersten Schritt.
+Details: https://alpinesauber.at/treppenreinigung/
+
+### Wohnungsreinigung
+Kategorie: Zuhause.
+Alpine Sauber – Wohnungsreinigung mit Perfektion & Vertrauen. Sauberkeit, auf die Sie sich verlassen können.
+Details: https://alpinesauber.at/wohnungsreinigung/
+
+### Grundreinigung
+Kategorie: Zuhause.
+Unsere Grundreinigung sorgt für eine gründliche Tiefensauberkeit in allen Räumen. Wir entfernen hartnäckigen Schmutz, Ablagerungen und schwer erreichbare Verunreinigungen effektiv und schonend – dort, wo herkömmliche Reinigung an ihre Grenzen stößt. Ideal für Wohnräume, Büros und Gewerbeflächen – immer dann, wenn eine intensive Reinigung erforderlich ist. Mit modernster Technik, umweltfreundlichen Reinigungsmitteln und geschultem Fachpersonal sorgen wir für nachhaltige Sauberkeit bis ins Detail.
+Details: https://alpinesauber.at/grundreinigung/
+
+### Fensterreinigung
+Kategorie: Glas & Außen.
+Unsere Fensterreinigung sorgt für streifenfreie Sauberkeit und klare Sicht. Wir reinigen professionell Ihre Fenster, Rahmen und Fensterbänke und verleihen Ihrem Objekt ein makellos gepflegtes Erscheinungsbild. Mit hochwertigen Reinigungsmitteln und modernen Techniken entfernen wir selbst hartnäckige Verschmutzungen und sorgen für glänzende Ergebnisse – innen und außen.
+Details: https://alpinesauber.at/fensterreinigung/
+
+### Fassadenreinigung
+Kategorie: Glas & Außen.
+Die Fassade ist das Gesicht jeder Immobilie – mit Alpine Sauber bekommt sie ihren ursprünglichen Glanz zurück.
+Details: https://alpinesauber.at/fassadenreinigung/
+
+### Grünraumpflege
+Kategorie: Glas & Außen.
+Alpine Sauber – Wenn Perfektion im Grünen beginnt. Professionelle Grünpflege aus Graz – für die Steiermark & ganz Österreich.
+Details: https://alpinesauber.at/grunraumpflege/
+
+### Winterdienst
+Kategorie: Glas & Außen.
+Unser Winterdienst sorgt dafür, dass Ihr Zugang während der kalten Jahreszeit stets sicher und frei von Gefahren bleibt. Wir übernehmen die Schneeräumung und das Streuen von Eis, um Unfälle zu vermeiden und Ihre Zufahrt jederzeit zugänglich zu halten.
+Details: https://alpinesauber.at/winterdienst/
+
+### Baureinigung
+Kategorie: Spezialreinigung.
+Sauberkeit von Grund auf – für den perfekten Abschluss Ihres Bauprojekts.
+Details: https://alpinesauber.at/baureinigung/
+
+### Brandreinigung
+Kategorie: Spezialreinigung.
+Nach einem Brand zählt jede Minute – Alpine Sauber bringt Ihre Immobilie schnell, sicher und sauber zurück in den Bestzustand.
+Details: https://alpinesauber.at/brandreinigung/
+
+## Primärquellen
+- Startseite: https://alpinesauber.at/
+- Leistungen: https://alpinesauber.at/leistungen/
+- Über uns: https://alpinesauber.at/uber-uns/
+- Kontakt: https://alpinesauber.at/kontakt/
+- Impressum: https://alpinesauber.at/impressum/
+- Datenschutz: https://alpinesauber.at/datenschutz/

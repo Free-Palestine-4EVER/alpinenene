@@ -843,6 +843,12 @@ body{background:radial-gradient(ellipse at 8% 3%,rgba(223,232,240,.55),transpare
 .sheet-neighbor-heading>p:last-child{margin:0;color:#7b857e;font-size:10px;line-height:1.5}
 .sheet-neighbor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .sheet-neighbor-card{position:relative;display:flex;min-width:0;min-height:101px;flex-direction:column;align-items:flex-start;justify-content:space-between;overflow:hidden;padding:12px;border:1px solid rgba(39,54,67,.1);border-radius:20px;background:linear-gradient(135deg,#eef2f5,#e7ebee);color:#24303b;text-align:left;isolation:isolate;cursor:pointer;transition:transform .2s cubic-bezier(.2,.8,.2,1),border-color .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s cubic-bezier(.2,.8,.2,1)}
+.service-card,.card-link,.sheet-neighbor-card{font:inherit;text-decoration:none}
+.service-card,.card-link{color:inherit}
+.sheet-neighbor-card[aria-disabled="true"]{border-style:dashed;background:#eff1f3;color:#89938b;cursor:default}
+.sheet-neighbor-card[aria-disabled="true"]:before{background:linear-gradient(110deg,rgba(244,246,248,.98),rgba(239,242,244,.8))}
+.sheet-neighbor-card[aria-disabled="true"] strong{color:#818a82}
+.sheet-neighbor-card[aria-disabled="true"]:hover,.sheet-neighbor-card[aria-disabled="true"]:active{transform:none;box-shadow:none}
 .sheet-neighbor-card:before{position:absolute;z-index:-1;inset:0;content:"";background:linear-gradient(90deg,rgba(246,248,249,.99) 0%,rgba(246,248,249,.95) 44%,rgba(246,248,249,.17) 100%)}
 .sheet-neighbor-card img{position:absolute;z-index:-2;right:-4px;bottom:-8px;width:79px;height:85px;object-fit:cover;object-position:center 39%;border-radius:24px 0 0 0;opacity:.92;mask-image:linear-gradient(90deg,transparent 0%,#000000 24%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000000 24%)}
 .sheet-neighbor-top{position:relative;z-index:1;display:flex;width:100%;align-items:center;justify-content:space-between;gap:5px;color:#728275;font-size:7px;font-weight:760;letter-spacing:.105em}
@@ -853,6 +859,7 @@ body{background:radial-gradient(ellipse at 8% 3%,rgba(223,232,240,.55),transpare
 .sheet-neighbor-card:disabled{border-style:dashed;background:#eff1f3;color:#89938b;cursor:default}
 .sheet-neighbor-card:disabled:before{background:linear-gradient(110deg,rgba(244,246,248,.98),rgba(239,242,244,.8))}
 .sheet-neighbor-card:disabled strong{color:#818a82}
+.sheet-neighbor-card[aria-disabled="true"]:hover:not(:disabled),.sheet-neighbor-card[aria-disabled="true"]:active:not(:disabled){transform:none;box-shadow:none}
 .sheet-neighbor-endmark{position:absolute;right:12px;bottom:12px;display:grid;width:28px;height:28px;place-items:center;border:1px solid rgba(38,59,77,.13);border-radius:50%;background:rgba(255,255,255,.74);color:#516679;font-size:13px}
 .sheet-photo-controls button:focus-visible,.sheet-photo-controls a:focus-visible,.sheet-section-chip:focus-visible,.sheet-neighbor-card:focus-visible{outline:3px solid #9dc2e2;outline-offset:3px}
 .sheet-image-wrap{touch-action:pan-y pinch-zoom}

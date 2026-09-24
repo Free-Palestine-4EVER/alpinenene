@@ -11,6 +11,7 @@ const serviceSheet = document.querySelector("#service-sheet");
 const legalSheet = document.querySelector("#legal-sheet");
 const toast = document.querySelector("#toast");
 let siteContent = window.ALPINE_SAUBER_CONTENT || null;
+const seoConfig = window.ALPINE_SAUBER_SEO || null;
 let activeCategory = "Alle";
 let activeHomeCategory = "Alle";
 let previousFocus = null;
@@ -233,6 +234,152 @@ function announce(message) {
   toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
 }
 
+function setMetaContent(selector, value) {
+  const element = document.querySelector(selector);
+  if (element) element.setAttribute("content", value);
+}
+
+function createLocalBusinessSchema() {
+  if (!seoConfig) return null;
+  const { business, siteUrl } = seoConfig;
+  return {
+    "@type": "LocalBusiness",
+    "@id": `${siteUrl}/#business`,
+    name: business.name,
+    url: `${siteUrl}/`,
+    description: business.description,
+    telephone: business.telephone,
+    email: business.email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: business.streetAddress,
+      postalCode: business.postalCode,
+      addressLocality: business.addressLocality,
+      addressCountry: business.addressCountry
+    },
+    openingHoursSpecification: [{
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: business.hours.days.map((day) => `https://schema.org/${day}`),
+      opens: business.hours.opens,
+      closes: business.hours.closes
+    }],
+    logo: business.logo,
+    image: business.image,
+    areaServed: [
+      { "@type": "City", name: "Graz" },
+      { "@type": "AdministrativeArea", name: "Steiermark" },
+      { "@type": "Country", name: "Österreich" }
+    ]
+  };
+}
+
+function applySeoMetadata({ title, description, path, service = null }) {
+  if (!seoConfig) return;
+  const canonical = `${seoConfig.siteUrl}${path}`;
+  document.title = title;
+  setMetaContent('meta[name="description"]', description);
+  setMetaContent('meta[property="og:title"]', title);
+  setMetaContent('meta[property="og:description"]', description);
+  setMetaContent('meta[property="og:url"]', canonical);
+  setMetaContent('meta[name="twitter:title"]', title);
+  setMetaContent('meta[name="twitter:description"]', description);
+  const canonicalLink = document.querySelector('link[rel="canonical"]');
+  if (canonicalLink) canonicalLink.href = canonical;
+
+  const routePage = seoConfig.pages.find((page) => page.path === path);
+  const graph = [createLocalBusinessSchema(), {
+    "@type": "WebSite",
+    "@id": `${seoConfig.siteUrl}/#website`,
+    url: `${seoConfig.siteUrl}/`,
+    name: seoConfig.business.brandName,
+    inLanguage: "de-AT",
+    publisher: { "@id": `${seoConfig.siteUrl}/#business` }
+  }, {
+    "@type": routePage?.screen === "contact" ? "ContactPage" : "WebPage",
+    "@id": `${canonical}#webpage`,
+    url: canonical,
+    name: title,
+    description,
+    inLanguage: "de-AT",
+    isPartOf: { "@id": `${seoConfig.siteUrl}/#website` },
+    about: { "@id": `${seoConfig.siteUrl}/#business` },
+    ...(service ? { mainEntity: { "@id": `${canonical}#service` } } : {})
+  }];
+  if (service) graph.push({
+    "@type": "Service",
+    "@id": `${canonical}#service`,
+    name: service.title,
+    serviceType: service.title,
+    description: service.summary,
+    url: canonical,
+    provider: { "@id": `${seoConfig.siteUrl}/#business` },
+    areaServed: ["Graz", "Steiermark", "Österreich"]
+  });
+  if (path !== "/") {
+    const breadcrumb = [{ name: "Startseite", item: `${seoConfig.siteUrl}/` }];
+    if (service) breadcrumb.push({ name: "Leistungen", item: `${seoConfig.siteUrl}/leistungen/` });
+    breadcrumb.push({ name: service?.title || title.split("|")[0].trim(), item: canonical });
+    graph.push({
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumb.map((item, index) => ({ "@type": "ListItem", position: index + 1, ...item }))
+    });
+  }
+  const schema = document.querySelector("#structured-data");
+  if (schema) schema.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+}
+
+function serviceFromPath(pathname = window.location.pathname) {
+  if (!siteContent) return null;
+  const route = decodeURIComponent(pathname).replace(/^\/+|\/+$/g, "");
+  return siteContent.services.find((service) => service.id === route) || null;
+}
+
+function pageForScreen(screen) {
+  return seoConfig?.pages.find((page) => page.screen === screen) || null;
+}
+
+function setScreenSeo(screen) {
+  const page = pageForScreen(screen);
+  if (page) applySeoMetadata(page);
+}
+
+function closeServiceDetail() {
+  if (location.protocol === "file:") {
+    serviceSheet.close();
+    setScreenSeo(location.hash.slice(1) || "home");
+    return;
+  }
+  const hasInAppReturn = history.state?.alpineServiceId && history.state?.alpineReturnUrl;
+  if (hasInAppReturn) {
+    serviceSheet.close();
+    history.back();
+    return;
+  }
+  serviceSheet.close();
+  if (serviceFromPath()) {
+    history.replaceState(null, "", "/#services");
+    navigate("services", { hash: false, scroll: false });
+  }
+}
+
+function openServiceRoute(service, trigger) {
+  if (location.protocol === "file:") {
+    const focusTarget = trigger instanceof HTMLAnchorElement ? trigger : trigger?.querySelector("a.card-link");
+    renderServiceDetail(service, focusTarget || null);
+    return;
+  }
+  const nextPath = `/${encodeURIComponent(service.id)}/`;
+  const currentService = serviceFromPath();
+  if (currentService) {
+    history.replaceState({ ...(history.state || {}), alpineServiceId: service.id }, "", nextPath);
+  } else {
+    const returnUrl = `${location.pathname}${location.search}${location.hash}` || "/";
+    history.pushState({ alpineServiceId: service.id, alpineReturnUrl: returnUrl }, "", nextPath);
+  }
+  const focusTarget = trigger instanceof HTMLAnchorElement ? trigger : trigger?.querySelector("a.card-link");
+  renderServiceDetail(service, focusTarget || null);
+}
+
 function navigate(name, options = {}) {
   if (!screens.includes(name)) return;
   document.querySelectorAll(".screen").forEach((screen) => {
@@ -248,7 +395,8 @@ function navigate(name, options = {}) {
       else control.removeAttribute("aria-current");
     }
   });
-  if (options.hash !== false) history.replaceState(null, "", `#${name}`);
+  if (options.hash !== false) history.replaceState(null, "", location.protocol === "file:" ? `#${name}` : `/#${name}`);
+  if (options.seo !== false) setScreenSeo(name);
   if (options.scroll !== false) window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
 }
 
@@ -257,23 +405,24 @@ function paragraphMarkup(paragraphs, className = "") {
 }
 
 function cardMarkup(service, compact = false) {
+  const detailUrl = `/${encodeURIComponent(service.id)}/`;
   if (compact) {
     return `<article class="service-card service-card-home${compact ? " service-card-compact" : ""}" data-service-id="${safe(service.id)}" data-tint="${tintById[service.id] || "green"}">
       ${serviceCardArtMarkup(service.id)}
       <span class="card-category"><i aria-hidden="true"></i>${safe(shortCategory(service.category))}</span>
       <h3>${safe(service.title)}</h3>
       <p>${safe(service.summary || "Details gerne auf Anfrage.")}</p>
-      <button class="card-link" type="button" data-service-id="${safe(service.id)}" aria-label="Mehr über ${safe(service.title)} erfahren">Mehr erfahren <span aria-hidden="true">↗</span></button>
+      <a class="card-link" href="${detailUrl}" data-service-id="${safe(service.id)}" aria-label="Mehr über ${safe(service.title)} erfahren">Mehr erfahren <span aria-hidden="true">↗</span></a>
       <img class="card-image" src="${safe(serviceImage(service))}" alt="" loading="${compact ? "eager" : "lazy"}" fetchpriority="${compact ? "low" : "auto"}" width="1280" height="1280" />
     </article>`;
   }
-  return `<button class="service-card${compact ? " service-card-compact" : ""}" type="button" data-service-id="${safe(service.id)}" data-tint="${tintById[service.id] || "green"}" aria-label="Details zu ${safe(service.title)} ansehen">
+  return `<a class="service-card${compact ? " service-card-compact" : ""}" href="${detailUrl}" data-service-id="${safe(service.id)}" data-tint="${tintById[service.id] || "green"}" aria-label="Details zu ${safe(service.title)} ansehen">
     <span class="card-category"><i aria-hidden="true"></i>${safe(shortCategory(service.category))}</span>
     <h3>${safe(service.title)}</h3>
     <p>${safe(service.summary || "Details gerne auf Anfrage.")}</p>
     <span class="card-link">Mehr erfahren <span aria-hidden="true">↗</span></span>
     <img class="card-image" src="${safe(serviceImage(service))}" alt="" loading="${compact ? "eager" : "lazy"}" fetchpriority="${compact ? "low" : "auto"}" width="1280" height="1280" />
-  </button>`;
+  </a>`;
 }
 
 function makeCategoryFilters(container, className, onSelect) {
@@ -386,6 +535,10 @@ function renderServiceDetail(service, trigger, options = {}) {
     serviceSheet.getBoundingClientRect();
   }
   activeServiceId = service.id;
+  const summary = cleanEditorialText(service.summary || "Für Details zu dieser Leistung berät Sie Alpine Sauber gerne persönlich.");
+  const seoDescription = summary.length > 157 ? `${summary.slice(0, 154).replace(/[\s.,;:!?-]+$/g, "")}…` : summary;
+  const servicePath = `/${encodeURIComponent(service.id)}/`;
+  applySeoMetadata({ title: `${service.title} in Graz | Alpine Sauber`, description: seoDescription, path: servicePath, service });
   const serviceIndex = siteContent.services.findIndex((item) => item.id === service.id);
   document.querySelector("#sheet-title").textContent = service.title;
   document.querySelector("#sheet-summary").textContent = service.summary || "Für Details zu dieser Leistung berät Sie Alpine Sauber gerne persönlich.";
@@ -413,11 +566,11 @@ function renderServiceDetail(service, trigger, options = {}) {
     { direction: "next", service: siteContent.services[serviceIndex + 1], label: "NÄCHSTE LEISTUNG", icon: "↗" }
   ].map(({ direction, service: neighbor, label, icon }) => {
     const disabled = !neighbor;
-    return `<button class="sheet-neighbor-card${direction === "previous" ? " is-previous" : " is-next"}" type="button" data-detail-navigation="${direction}"${disabled ? " disabled" : ""} aria-label="${disabled ? "Keine weitere Leistung" : `${label === "NÄCHSTE LEISTUNG" ? "Nächste" : "Vorherige"} Leistung: ${safe(neighbor.title)}`}"${neighbor ? ` data-neighbor-id="${safe(neighbor.id)}"` : ""}>
+    return `<a class="sheet-neighbor-card${direction === "previous" ? " is-previous" : " is-next"}" href="${neighbor ? `/${encodeURIComponent(neighbor.id)}/` : "/leistungen/"}" data-detail-navigation="${direction}"${disabled ? ' aria-disabled="true"' : ""} aria-label="${disabled ? "Keine weitere Leistung" : `${label === "NÄCHSTE LEISTUNG" ? "Nächste" : "Vorherige"} Leistung: ${safe(neighbor.title)}`}"${neighbor ? ` data-neighbor-id="${safe(neighbor.id)}"` : ""}>
       <span class="sheet-neighbor-top"><span>${label}</span><span aria-hidden="true">${icon}</span></span>
       <strong>${neighbor ? safe(neighbor.title) : (direction === "previous" ? "Erste Leistung" : "Alle 12 angesehen")}</strong>
       ${neighbor ? `<img src="${safe(serviceDetailImage(neighbor))}" alt="" loading="lazy" />` : `<span class="sheet-neighbor-endmark" aria-hidden="true">✓</span>`}
-    </button>`;
+    </a>`;
   }).join("");
   document.querySelector("#request-service").value = service.title;
   if (!wasOpen) serviceSheet.showModal();
@@ -435,7 +588,11 @@ function navigateServiceDetail(direction) {
   if (!siteContent || !activeServiceId) return;
   const currentIndex = siteContent.services.findIndex((service) => service.id === activeServiceId);
   const nextService = siteContent.services[currentIndex + (direction === "next" ? 1 : -1)];
-  if (nextService) renderServiceDetail(nextService, null, { focusHeading: true });
+  if (nextService) {
+    const nextPath = `/${encodeURIComponent(nextService.id)}/`;
+    if (location.protocol !== "file:") history.replaceState({ ...(history.state || {}), alpineServiceId: nextService.id }, "", nextPath);
+    renderServiceDetail(nextService, null, { focusHeading: true });
+  }
 }
 
 function updateSheetReadingState() {
@@ -468,12 +625,34 @@ function updateSheetReadingState() {
   }
 }
 
-function renderLegal(kind) {
+function closeLegalDetail() {
+  if (location.protocol === "file:") {
+    legalSheet.close();
+    setScreenSeo(location.hash.slice(1) || "home");
+    return;
+  }
+  const hasInAppReturn = history.state?.alpineLegalId && history.state?.alpineReturnUrl;
+  if (hasInAppReturn) {
+    legalSheet.close();
+    history.back();
+    return;
+  }
+  legalSheet.close();
+  const legalPage = seoConfig?.pages.find((page) => page.legal && page.path === location.pathname);
+  if (legalPage) {
+    history.replaceState(null, "", "/#home");
+    navigate("home", { hash: false, scroll: false });
+  }
+}
+
+function renderLegal(kind, options = {}) {
   const isPrivacy = kind === "privacy";
-  document.querySelector("#legal-title").textContent = isPrivacy ? "Datenschutz" : "Impressum";
+  const page = seoConfig?.pages.find((item) => item.legal === kind);
+  document.querySelector("#legal-title").textContent = isPrivacy ? "Datenschutzerklärung" : "Impressum";
   document.querySelector("#legal-copy").innerHTML = paragraphMarkup(isPrivacy ? siteContent.privacyBlocks : siteContent.impressumBlocks);
+  if (page) applySeoMetadata(page);
   legalSheet.showModal();
-  requestAnimationFrame(() => document.querySelector(".legal-close").focus());
+  if (!options.routeLoad) requestAnimationFrame(() => document.querySelector(".legal-close").focus());
 }
 
 function wireNavigation() {
@@ -514,13 +693,21 @@ function wireNavigation() {
       return;
     }
     const detailNavigation = event.target.closest("[data-detail-navigation]");
-    if (detailNavigation && !detailNavigation.disabled) {
-      navigateServiceDetail(detailNavigation.dataset.detailNavigation);
+    if (detailNavigation) {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      if (detailNavigation.getAttribute("aria-disabled") !== "true") navigateServiceDetail(detailNavigation.dataset.detailNavigation);
       return;
     }
     const legalButton = event.target.closest("[data-legal]");
     if (legalButton) {
-      renderLegal(legalButton.dataset.legal);
+      const kind = legalButton.dataset.legal;
+      const page = seoConfig?.pages.find((item) => item.legal === kind);
+      if (page && location.protocol !== "file:") {
+        const returnUrl = `${location.pathname}${location.search}${location.hash}` || "/";
+        history.pushState({ alpineLegalId: kind, alpineReturnUrl: returnUrl }, "", page.path);
+      }
+      renderLegal(kind);
       return;
     }
     const screenControl = event.target.closest("[data-screen-link]");
@@ -534,18 +721,24 @@ function wireNavigation() {
     }
     const serviceButton = event.target.closest("[data-service-id]");
     if (serviceButton) {
+      if (serviceButton instanceof HTMLAnchorElement && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)) return;
       const service = siteContent.services.find((item) => item.id === serviceButton.dataset.serviceId);
-      if (service) renderServiceDetail(service, serviceButton);
+      if (service) {
+        event.preventDefault();
+        openServiceRoute(service, serviceButton);
+      }
       return;
     }
     if (event.target.closest(".sheet-close")) {
-      if (event.target.closest("#legal-sheet")) legalSheet.close();
-      else serviceSheet.close();
+      if (event.target.closest("#legal-sheet")) closeLegalDetail();
+      else closeServiceDetail();
     }
   });
 
-  serviceSheet.addEventListener("click", (event) => { if (event.target === serviceSheet) serviceSheet.close(); });
-  legalSheet.addEventListener("click", (event) => { if (event.target === legalSheet) legalSheet.close(); });
+  serviceSheet.addEventListener("click", (event) => { if (event.target === serviceSheet) closeServiceDetail(); });
+  serviceSheet.addEventListener("cancel", (event) => { event.preventDefault(); closeServiceDetail(); });
+  legalSheet.addEventListener("click", (event) => { if (event.target === legalSheet) closeLegalDetail(); });
+  legalSheet.addEventListener("cancel", (event) => { event.preventDefault(); closeLegalDetail(); });
   for (const dialog of [serviceSheet, legalSheet]) dialog.addEventListener("close", () => {
     if (dialog === serviceSheet) {
       activeServiceId = null;
@@ -555,6 +748,25 @@ function wireNavigation() {
     }
     if (previousFocus && previousFocus.isConnected && !previousFocus.closest("[hidden]")) previousFocus.focus({ preventScroll: true });
     previousFocus = null;
+  });
+
+  window.addEventListener("popstate", () => {
+    const service = serviceFromPath();
+    if (service) {
+      navigate("services", { scroll: false, hash: false });
+      if (!serviceSheet.open || activeServiceId !== service.id) renderServiceDetail(service, null, { routeLoad: true });
+      return;
+    }
+    if (serviceSheet.open) serviceSheet.close();
+    if (legalSheet.open) legalSheet.close();
+    const legalPage = seoConfig?.pages.find((page) => page.path === location.pathname && page.legal);
+    if (legalPage) {
+      renderLegal(legalPage.legal, { routeLoad: true });
+      return;
+    }
+    const routePage = seoConfig?.pages.find((page) => page.path === location.pathname && page.screen);
+    const screen = routePage?.screen || location.hash.slice(1);
+    navigate(screens.includes(screen) ? screen : "home", { scroll: false, hash: false });
   });
 }
 
@@ -578,7 +790,7 @@ function enableSheetDrag() {
     startY = null;
     serviceSheet.style.transition = "";
     serviceSheet.style.translate = "";
-    if (delta > 90) serviceSheet.close();
+    if (delta > 90) closeServiceDetail();
   };
   grabber.addEventListener("pointerup", finish);
   grabber.addEventListener("pointercancel", finish);
@@ -629,8 +841,12 @@ async function init() {
   wireNavigation();
   enableSheetDrag();
   wireRequestForm();
-  const requestedScreen = location.hash.slice(1);
-  navigate(screens.includes(requestedScreen) ? requestedScreen : "home", { scroll: false, hash: false });
+  const requestedService = serviceFromPath();
+  const requestedPage = seoConfig?.pages.find((page) => page.path === `${location.pathname.replace(/\/$/, "") || ""}/`);
+  const requestedScreen = requestedPage?.screen || location.hash.slice(1);
+  navigate(requestedService ? "services" : (screens.includes(requestedScreen) ? requestedScreen : "home"), { scroll: false, hash: false });
+  if (requestedService) renderServiceDetail(requestedService, null, { routeLoad: true });
+  else if (requestedPage?.legal) renderLegal(requestedPage.legal, { routeLoad: true });
 }
 
 init();
