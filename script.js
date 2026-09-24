@@ -19,6 +19,40 @@ let activeServiceId = null;
 let sheetProgressFrame = 0;
 let sheetSwitchTimer;
 
+function wireBrandLoader() {
+  const loader = document.querySelector("#brand-loader");
+  if (!loader) return;
+
+  const startedAt = performance.now();
+  let pageReady = document.readyState === "complete";
+  let contentReady = false;
+  let dismissalScheduled = false;
+
+  const dismiss = () => {
+    if (!pageReady || !contentReady || dismissalScheduled) return;
+    dismissalScheduled = true;
+    const remaining = Math.max(0, 1850 - (performance.now() - startedAt));
+    window.setTimeout(() => {
+      loader.classList.add("is-leaving");
+      loader.setAttribute("aria-hidden", "true");
+      document.documentElement.classList.remove("is-loading");
+      window.setTimeout(() => loader.remove(), 700);
+    }, remaining);
+  };
+
+  if (!pageReady) window.addEventListener("load", () => { pageReady = true; dismiss(); }, { once: true });
+  window.addEventListener("alpine:content-ready", () => { contentReady = true; dismiss(); }, { once: true });
+
+  // Keep an unavailable content endpoint from trapping the page behind the loader.
+  window.setTimeout(() => {
+    pageReady = true;
+    contentReady = true;
+    dismiss();
+  }, 4200);
+}
+
+wireBrandLoader();
+
 const safe = (value = "") => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const cleanEditorialText = (value = "") => String(value)
   .replace(/[\p{Extended_Pictographic}\p{Emoji_Modifier}\p{Regional_Indicator}\uFE0E\uFE0F\u200D]/gu, "")

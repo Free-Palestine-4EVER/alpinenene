@@ -1694,3 +1694,148 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* Keep service details responsive to direct touch scrolling. */
 #sheet-scroll{-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scroll-behavior:auto;touch-action:pan-y pinch-zoom}
 .sheet-section-nav{position:relative;top:auto;backdrop-filter:none;-webkit-backdrop-filter:none}
+
+/* Updated Alpine Sauber lockup: the official mountain mark with its tagline. */
+.brand{
+  width:132px;
+  height:auto;
+  flex:0 0 132px;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+}
+.brand img{
+  width:min(100%,112px);
+  height:auto;
+  max-height:none;
+  mix-blend-mode:normal;
+}
+.app-header{height:98px;min-height:98px}
+.footer-logo-link{
+  display:inline-flex;
+  width:min(100%,232px);
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  padding:11px 12px 9px;
+  border:1px solid rgba(255,255,255,.78);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 8px 22px rgba(3,21,36,.14);
+}
+.footer-logo-link img{width:100%;height:auto;margin:0;object-fit:contain}
+
+/* A short, cinematic brand reveal for the first page visit. */
+html.is-loading,html.is-loading body{overflow:hidden}
+.brand-loader{
+  position:fixed;
+  z-index:10000;
+  inset:0;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  isolation:isolate;
+  background:#fff;
+  color:#173b5e;
+  opacity:1;
+  visibility:visible;
+  transition:opacity .65s cubic-bezier(.2,.75,.2,1),visibility .65s;
+}
+.brand-loader::before,.brand-loader::after{
+  position:absolute;
+  z-index:-1;
+  inset:-50%;
+  content:"";
+  pointer-events:none;
+}
+.brand-loader::before{
+  opacity:.42;
+  background:repeating-linear-gradient(118deg,transparent 0 74px,rgba(26,73,107,.045) 75px,transparent 76px 148px);
+  mask-image:linear-gradient(transparent 4%,#000 35%,#000 75%,transparent 98%);
+}
+.brand-loader::after{
+  inset:auto 0 0;
+  height:2px;
+  background:linear-gradient(90deg,#2186b8,#8ac7e5 44%,#ff842e 78%,#ffb276);
+  transform-origin:left;
+  animation:loader-edge-in 1.55s cubic-bezier(.16,1,.3,1) both;
+}
+.loader-stage{
+  position:relative;
+  z-index:2;
+  display:flex;
+  width:min(90vw,440px);
+  flex-direction:column;
+  align-items:center;
+  animation:loader-stage-in .72s cubic-bezier(.16,1,.3,1) both;
+}
+.loader-brand-card{
+  position:relative;
+  display:flex;
+  width:min(100%,382px);
+  flex-direction:column;
+  align-items:center;
+  padding:24px 30px 21px;
+  overflow:hidden;
+  border:1px solid rgba(23,59,94,.12);
+  border-radius:27px;
+  background:linear-gradient(150deg,#fff 0%,#fbfdfe 100%);
+  box-shadow:0 30px 75px rgba(31,70,98,.13),0 0 0 8px rgba(33,134,184,.045),inset 0 1px 0 #fff;
+}
+.loader-brand-card::before{
+  position:absolute;
+  inset:0 0 auto;
+  height:3px;
+  background:linear-gradient(90deg,#ed7418 0 24%,#f6a236 24% 38%,#1b397e 58% 100%);
+  content:"";
+}
+.loader-logo{display:block;width:min(100%,300px);height:auto;filter:drop-shadow(0 5px 4px rgba(11,35,53,.06))}
+.loader-status{display:flex;align-items:center;gap:10px;margin-top:30px;color:#5c7181;font-size:9px;font-weight:720;letter-spacing:.19em}
+.loader-status-dot{width:7px;height:7px;border-radius:50%;background:#ff842e;box-shadow:0 0 0 5px rgba(255,132,46,.13),0 0 18px rgba(255,132,46,.7);animation:loader-dot-pulse 1.25s ease-in-out infinite}
+.loader-progress{width:min(71vw,305px);height:2px;margin-top:17px;overflow:hidden;background:rgba(27,64,90,.13)}
+.loader-progress span{display:block;width:76%;height:100%;background:linear-gradient(90deg,#2186b8,#9dd6eb 62%,#ff842e);box-shadow:0 0 12px rgba(90,177,218,.65);transform-origin:left;animation:loader-progress-in 1.85s cubic-bezier(.16,1,.3,1) both}
+.loader-orbit{position:absolute;z-index:0;left:50%;top:50%;width:min(84vw,720px);height:min(66vh,490px);border:1px solid rgba(23,73,108,.15);border-radius:50%;transform:translate(-50%,-50%) rotate(-24deg);animation:loader-orbit-drift 13s ease-in-out infinite alternate}
+.loader-orbit::before{position:absolute;inset:11% -7%;border:1px solid rgba(23,73,108,.08);border-radius:50%;content:"";transform:rotate(13deg)}
+.loader-orbit::after{position:absolute;top:13%;left:19%;width:7px;height:7px;border:2px solid #ff9a50;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(255,132,46,.5);content:""}
+.loader-orbit--inner{width:min(67vw,550px);height:min(48vh,340px);border-color:rgba(23,73,108,.1);transform:translate(-50%,-50%) rotate(26deg);animation-direction:alternate-reverse;animation-duration:17s}
+.loader-orbit--inner::before{inset:12% -6%;border-color:rgba(23,73,108,.055)}
+.loader-orbit--inner::after{top:auto;right:15%;bottom:16%;left:auto;width:4px;height:4px;border:0;background:#2186b8;box-shadow:0 0 15px rgba(33,134,184,.4)}
+.loader-ridge{position:absolute;z-index:1;right:0;bottom:0;left:0;width:100%;height:min(27vh,230px);opacity:.65;pointer-events:none}
+.loader-ridge-back{fill:rgba(232,241,247,.78)}
+.loader-ridge-line,.loader-ridge-trail,.loader-ridge-accent{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.loader-ridge-line{stroke:rgba(31,83,119,.38);stroke-width:1.1;stroke-dasharray:1650;stroke-dashoffset:1650;animation:loader-ridge-draw 1.55s .08s ease-out forwards}
+.loader-ridge-trail{stroke:rgba(31,83,119,.2);stroke-width:.85;stroke-dasharray:1580;stroke-dashoffset:1580;animation:loader-ridge-draw 1.8s .12s ease-out forwards}
+.loader-ridge-accent{stroke:rgba(237,116,24,.76);stroke-width:1.55;stroke-dasharray:430;stroke-dashoffset:430;animation:loader-ridge-draw 1.2s .22s ease-out forwards}
+.loader-signature{position:absolute;right:clamp(19px,5vw,62px);bottom:clamp(20px,5vh,42px);left:clamp(19px,5vw,62px);z-index:2;display:flex;align-items:center;gap:11px;color:rgba(23,59,94,.52);font-size:8px;font-weight:680;letter-spacing:.18em}
+.loader-signature i{height:1px;flex:1;background:linear-gradient(90deg,rgba(23,59,94,.18),rgba(23,59,94,.035))}
+.brand-loader.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+.brand-loader.is-leaving .loader-progress span{width:100%;transition:width .35s ease}
+@keyframes loader-stage-in{from{opacity:.32;transform:translateY(14px) scale(.975);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes loader-edge-in{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes loader-progress-in{from{transform:scaleX(.06)}to{transform:scaleX(1)}}
+@keyframes loader-dot-pulse{50%{box-shadow:0 0 0 8px rgba(255,132,46,.035),0 0 24px rgba(255,132,46,.9);transform:scale(.86)}}
+@keyframes loader-orbit-drift{from{rotate:-5deg}to{rotate:5deg}}
+@keyframes loader-ridge-draw{to{stroke-dashoffset:0}}
+@media(max-width:980px){.app-header{height:92px;min-height:92px}.brand{width:118px;flex-basis:118px}.brand img{width:min(100%,103px)}}
+@media(max-width:700px){
+  .app-header{height:82px;min-height:82px}
+  .brand{width:min(104px,35vw);flex:0 0 min(104px,35vw)}
+  .brand img{width:100%;max-height:none}
+  .header-contact{align-self:center}
+  .footer-logo-link{width:min(100%,150px);gap:4px;padding:8px 8px 7px;border-radius:13px}
+  .loader-brand-card{width:min(100%,330px);padding:20px 23px 18px;border-radius:23px}
+  .loader-logo{width:min(100%,255px)}
+  .loader-status{margin-top:24px;font-size:8px;letter-spacing:.14em}
+  .loader-signature{bottom:calc(18px + var(--safe-bottom));font-size:7px}
+  .loader-ridge{height:19vh}
+}
+@media(max-width:390px){
+  .brand{width:min(96px,32vw);flex-basis:min(96px,32vw)}
+  .brand img{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .brand-loader,.loader-stage,.loader-orbit,.loader-ridge-line,.loader-progress span,.loader-status-dot{animation:none!important;transition:none!important}
+}
+
+/* Keep full-bleed sections flush with the window without a stray page scrollbar. */
+html,body{overflow-x:clip}

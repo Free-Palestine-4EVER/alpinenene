@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="is-loading">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,19 +10,38 @@
     <meta property="og:description" content="Reinigung für Zuhause, Büro und Gebäude. Alpine Sauber, Graz." />
     <meta property="og:image" content="assets/alpine-sauber-original-hero.png" />
     <title>Alpine Sauber — Professionelle Reinigung</title>
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="assets/alpine-sauber-icon.png" type="image/png" sizes="128x128" />
     <link rel="preload" href="assets/manrope-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/alpine-sauber-logo-lockup.png" as="image" fetchpriority="high" />
     <link rel="preload" href="assets/alpine-sauber-original-hero.png" as="image" fetchpriority="high" />
     <link rel="stylesheet" href="styles.css" />
     <script defer src="site-content.js"></script>
     <script defer src="script.js"></script>
   </head>
   <body>
+    <div class="brand-loader" id="brand-loader" role="status" aria-label="Alpine Sauber wird geladen">
+      <div class="loader-orbit loader-orbit--outer" aria-hidden="true"><i></i></div>
+      <div class="loader-orbit loader-orbit--inner" aria-hidden="true"><i></i></div>
+      <svg class="loader-ridge" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+        <path class="loader-ridge-back" d="M0 225 164 112l70 56 137-125 183 183 111-90 112 66 157-151 178 183 88-73 95 64 145-138v173H0Z" />
+        <path class="loader-ridge-line" d="m0 225 164-113 70 56L371 43l183 183 111-90 112 66L934 51l178 183 88-73 95 64 145-138" />
+        <path class="loader-ridge-trail" d="m-20 247 184-91 77 50L371 72l183 170 111-72 113 49 157-132 178 165 88-51 95 45 165-112" />
+        <path class="loader-ridge-accent" d="m212 174 159-131 62 61m422 87 79-140 91 94" />
+      </svg>
+      <div class="loader-stage">
+        <div class="loader-brand-card">
+          <img class="loader-logo" src="assets/alpine-sauber-logo-lockup.png" alt="Alpine Sauber — Reinigung mit Leidenschaft" width="799" height="567" />
+        </div>
+        <div class="loader-status"><span class="loader-status-dot" aria-hidden="true"></span><span>GRAZ · STEIERMARK · ÖSTERREICH</span></div>
+        <div class="loader-progress" aria-hidden="true"><span></span></div>
+      </div>
+      <div class="loader-signature" aria-hidden="true"><span>ALPINE SAUBER</span><i></i><span>SEIT ÜBER 25 JAHREN</span></div>
+    </div>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
     <div class="app-shell">
       <header class="app-header">
         <a class="brand" href="#home" data-screen-link="home" aria-label="Alpine Sauber — Startseite">
-          <img src="assets/alpine-sauber-logo-color.png" alt="Alpine Sauber" width="1344" height="768" />
+          <img src="assets/alpine-sauber-logo-lockup.png" alt="Alpine Sauber — Reinigung mit Leidenschaft" width="799" height="567" fetchpriority="high" />
         </a>
         <nav class="desktop-nav" aria-label="Hauptnavigation">
           <button class="nav-tab is-active" type="button" data-screen-link="home">Start</button>
@@ -273,7 +292,7 @@
         <div class="footer-grid">
           <div class="footer-brand-block">
             <a class="footer-logo-link" href="#home" data-screen-link="home" aria-label="Alpine Sauber – zur Startseite">
-              <img src="assets/alpine-sauber-logo.png" alt="Alpine Sauber – Reinigung mit Leidenschaft" width="954" height="551" loading="lazy" />
+              <img src="assets/alpine-sauber-logo-lockup.png" alt="Alpine Sauber — Reinigung mit Leidenschaft" width="799" height="567" loading="lazy" />
             </a>
             <p>Ihr Familienunternehmen aus Graz – professionelle Reinigung mit Sorgfalt, Verantwortung und persönlichem Service.</p>
             <a class="footer-address" href="https://maps.google.com/?q=Eggenberger+G%C3%BCrtel+56b,+8020+Graz,+Austria" target="_blank" rel="noreferrer">
