@@ -257,54 +257,6 @@
   .journey-scene-copy{min-height:145px;padding:13px 13px 11px}
 }
 
-/* Mobile uses a natural-flow photo story so no section is hidden behind a scroll pin. */
-.journey-mobile-heading,.journey-mobile-stories{display:none}
-@media(max-width:700px){
-  .motion-journey[data-reduced="true"]{
-    width:var(--layout-viewport-width,100vw);
-    height:auto;
-    min-height:0;
-    margin:44px 0 38px;
-    margin-left:calc(50% - var(--layout-viewport-width,100vw)/2);
-    overflow:visible;
-    border-radius:0;
-  }
-  .motion-journey[data-reduced="true"] .motion-journey-sticky{
-    position:relative;
-    top:auto;
-    height:auto;
-    min-height:0;
-    max-height:none;
-    overflow:visible;
-    padding:20px 17px 26px;
-    border-radius:0;
-  }
-  .motion-journey[data-reduced="true"] .journey-topline{font-size:8px;letter-spacing:.1em}
-  .motion-journey[data-reduced="true"] .journey-scroll-hint{display:none}
-  .motion-journey[data-reduced="true"] .journey-layout,
-  .motion-journey[data-reduced="true"] .journey-progress-track{display:none}
-  .motion-journey[data-reduced="true"] .journey-mobile-heading{display:block;margin:27px 1px 21px}
-  .motion-journey[data-reduced="true"] .journey-mobile-heading .journey-overline{position:relative;top:auto;right:auto;left:auto;margin:0 0 10px;font-size:8px;letter-spacing:.15em}
-  .motion-journey[data-reduced="true"] .journey-mobile-heading h2{max-width:360px;margin:0 0 11px;color:#f8fbff;font-size:clamp(40px,11vw,52px);font-weight:650;line-height:.91;letter-spacing:-.075em}
-  .motion-journey[data-reduced="true"] .journey-mobile-heading h2 em{color:#ff9346;font-style:normal;font-weight:500}
-  .motion-journey[data-reduced="true"] .journey-mobile-heading .journey-lede{position:relative;top:auto;right:auto;left:auto;max-width:340px;margin:0;color:rgba(232,243,251,.74);font-size:12px;line-height:1.55}
-  .motion-journey[data-reduced="true"] .journey-mobile-stories{display:grid;gap:25px}
-  .journey-mobile-story{min-width:0}
-  .journey-mobile-photo{position:relative;width:100%;aspect-ratio:9/16;margin:0;overflow:hidden;border:1px solid rgba(121,194,231,.43);border-radius:25px;background:#183d5b;box-shadow:0 20px 44px rgba(0,12,25,.27),inset 0 1px rgba(255,255,255,.17);isolation:isolate}
-  .journey-mobile-photo::after{position:absolute;inset:42% 0 0;content:"";background:linear-gradient(180deg,transparent,rgba(4,19,32,.52));pointer-events:none}
-  .journey-mobile-photo img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center 25%}
-  .journey-mobile-photo figcaption{position:absolute;z-index:1;right:13px;bottom:37px;left:13px;display:flex;align-items:center;gap:8px;color:#fff;font-size:8px;font-weight:720;letter-spacing:.13em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.42)}
-  .journey-mobile-photo figcaption span{color:#ff9346}
-  .journey-mobile-copy{position:relative;z-index:2;margin:-24px 9px 0;padding:16px 15px 15px;overflow:hidden;border:1px solid rgba(112,195,232,.46);border-radius:22px;background:linear-gradient(138deg,#07263e,#114465);box-shadow:0 16px 34px rgba(1,17,32,.34),inset 0 1px rgba(255,255,255,.14);color:#fff}
-  .journey-mobile-copy::before{position:absolute;top:0;left:16px;width:38px;height:3px;border-radius:0 0 4px 4px;content:"";background:#ff842e;box-shadow:0 0 13px rgba(255,132,46,.6)}
-  .journey-mobile-copy .journey-scene-kicker{gap:7px;margin:0 0 6px;color:#ffad70;font-size:8px;letter-spacing:.13em}
-  .journey-mobile-copy .journey-scene-kicker span{color:rgba(230,241,249,.56)}
-  .journey-mobile-copy h3{margin:0 0 7px;color:#fff;font-size:21px;line-height:1.08;letter-spacing:-.045em}
-  .journey-mobile-copy>p:not(.journey-scene-kicker){margin:0 0 13px;color:rgba(245,250,253,.83);font-size:11px;line-height:1.5}
-  .journey-mobile-copy .journey-scene-link{min-height:39px;gap:17px;padding:0 14px;border:1px solid rgba(255,177,117,.62);border-radius:99px;background:#ff842e;color:#12334c;font-size:10px;font-weight:760;box-shadow:0 6px 18px rgba(255,132,46,.23)}
-  .journey-mobile-copy .journey-scene-link span{color:inherit;font-size:15px}
-}
-
 /* Portrait service photography: taller frames on desktop, full-scene image on mobile. */
 .journey-layout{grid-template-columns:minmax(300px,.92fr) minmax(380px,1fr);gap:clamp(38px,7vw,110px)}
 .journey-visual-frame{aspect-ratio:.84;max-height:min(78svh,780px)}

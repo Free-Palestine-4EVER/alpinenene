@@ -64,7 +64,7 @@ function ScenePhoto({ scene, index, progress, reduced }) {
       aria-hidden="true"
       style={reduced ? { opacity: 1 } : { opacity, y, scale }}
     >
-      <img className="journey-scene-photo" src={scene.image} alt="" width="1008" height="1792" loading={reduced ? "eager" : "lazy"} fetchPriority={reduced || index === 0 ? "high" : "low"} decoding="async" />
+      <img className="journey-scene-photo" src={scene.image} alt="" width="1008" height="1792" loading="eager" fetchPriority={reduced || index === 0 ? "high" : "low"} decoding="async" />
       <figcaption><span>0{index + 1} / 03</span><span>{scene.category}</span></figcaption>
     </motion.figure>
   );
@@ -93,15 +93,8 @@ function SceneCopy({ scene, index, reduced }) {
 function AlpineJourney() {
   const trackRef = useRef(null);
   const reduced = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 700px)").matches);
-  const staticJourney = reduced || isMobile;
+  const staticJourney = reduced;
   const [activeSceneIndex, setActiveSceneIndex] = useState(0);
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 700px)");
-    const syncViewport = () => setIsMobile(query.matches);
-    query.addEventListener("change", syncViewport);
-    return () => query.removeEventListener("change", syncViewport);
-  }, []);
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: ["start start", "end end"],
@@ -156,29 +149,6 @@ function AlpineJourney() {
             </div>
             <div className="journey-visual-caption"><span>Präzision, die man sieht.</span><span>Graz · Steiermark · Österreich</span></div>
           </div>
-        </div>
-        <div className="journey-mobile-heading">
-          <p className="journey-overline">Zwölf Leistungen · ein Anspruch</p>
-          <h2>Sauberkeit.<br /><em>In jedem Raum.</em></h2>
-          <p className="journey-lede">Zuhause, im Unternehmen und überall dort, wo Sorgfalt den Unterschied macht.</p>
-        </div>
-        <div className="journey-mobile-stories">
-          {scenes.map((scene, index) => (
-            <article className="journey-mobile-story" key={scene.id}>
-              <figure className="journey-mobile-photo">
-                <img src={scene.image} alt={scene.alt} width="1008" height="1792" loading="eager" fetchPriority={index === 0 ? "high" : "low"} decoding="async" />
-                <figcaption>0{index + 1} / 03 <span>·</span> {scene.category}</figcaption>
-              </figure>
-              <div className="journey-mobile-copy">
-                <p className="journey-scene-kicker">0{index + 1} <span>—</span> {scene.category}</p>
-                <h3>{scene.title}</h3>
-                <p>{scene.summary}</p>
-                <button className="journey-scene-link" type="button" data-service-id={scene.id}>
-                  Leistung ansehen <span aria-hidden="true">↗</span>
-                </button>
-              </div>
-            </article>
-          ))}
         </div>
         <div className="journey-progress-track" aria-hidden="true">
           <motion.span style={{ scaleX: scrollYProgress }} />
