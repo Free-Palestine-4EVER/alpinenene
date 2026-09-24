@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  AnimatePresence,
   animate,
   motion,
   useReducedMotion,
@@ -43,42 +42,24 @@ function ScrollProgress() {
   return <motion.div className="motion-scroll-progress" style={{ scaleX: scrollYProgress }} />;
 }
 
-function sceneOpacity(progress, index) {
-  const ranges = [
-    [0, 0.04, 0.28, 0.37],
-    [0.28, 0.37, 0.62, 0.72],
-    [0.62, 0.72, 0.96, 1],
-  ];
-  const values = index === 0 ? [1, 1, 1, 0] : index === 2 ? [0, 1, 1, 1] : [0, 1, 1, 0];
-  return useTransform(progress, ranges[index], values);
-}
-
-function ScenePhoto({ scene, index, progress, reduced }) {
-  const opacity = sceneOpacity(progress, index);
-  const y = useTransform(progress, [0, 1], ["4%", "-4%"]);
-  const scale = useTransform(progress, [0, 1], [1.045, 1.12]);
-
+function ScenePhoto({ scene, index, active, reduced }) {
   return (
-    <motion.figure
+    <figure
       className="journey-scene-image"
       aria-hidden="true"
-      style={reduced ? { opacity: 1 } : { opacity, y, scale }}
+      style={!reduced && !active ? { display: "none" } : undefined}
     >
-      <img className="journey-scene-photo" src={scene.image} alt="" width="1008" height="1792" loading="eager" fetchPriority={reduced || index === 0 ? "high" : "low"} decoding="async" />
+      <img className="journey-scene-photo" src={scene.image} alt="" width="1008" height="1792" loading="eager" decoding="async" />
       <figcaption><span>0{index + 1} / 03</span><span>{scene.category}</span></figcaption>
-    </motion.figure>
+    </figure>
   );
 }
 
-function SceneCopy({ scene, index, reduced }) {
+function SceneCopy({ scene, index }) {
   return (
-    <motion.article
+    <article
       className="journey-scene-copy"
       aria-labelledby={`journey-title-${scene.id}`}
-      initial={reduced ? false : { opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.27, ease: [0.16, 1, 0.3, 1] }}
     >
       <p className="journey-scene-kicker">0{index + 1} <span>—</span> {scene.category}</p>
       <h3 id={`journey-title-${scene.id}`}>{scene.title}</h3>
@@ -86,7 +67,7 @@ function SceneCopy({ scene, index, reduced }) {
       <button className="journey-scene-link" type="button" data-service-id={scene.id}>
         Leistung ansehen <span aria-hidden="true">↗</span>
       </button>
-    </motion.article>
+    </article>
   );
 }
 
@@ -95,6 +76,7 @@ function AlpineJourney() {
   const reduced = useReducedMotion();
   const staticJourney = reduced;
   const [activeSceneIndex, setActiveSceneIndex] = useState(0);
+  const activeSceneIndexRef = useRef(0);
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: ["start start", "end end"],
@@ -102,8 +84,15 @@ function AlpineJourney() {
   const routeLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     if (staticJourney) return;
-    const next = progress < 0.34 ? 0 : progress < 0.68 ? 1 : 2;
-    setActiveSceneIndex((current) => current === next ? current : next);
+    const current = activeSceneIndexRef.current;
+    let next = current;
+    if (current === 0 && progress > 0.37) next = progress > 0.71 ? 2 : 1;
+    else if (current === 1 && progress < 0.31) next = 0;
+    else if (current === 1 && progress > 0.71) next = 2;
+    else if (current === 2 && progress < 0.65) next = progress < 0.31 ? 0 : 1;
+    if (next === current) return;
+    activeSceneIndexRef.current = next;
+    setActiveSceneIndex(next);
   });
 
   return (
@@ -126,11 +115,9 @@ function AlpineJourney() {
             <h2 id="journey-heading">Sauberkeit.<br /><em>In jedem Raum.</em></h2>
             <p className="journey-lede">Zuhause, im Unternehmen und überall dort, wo Sorgfalt den Unterschied macht.</p>
             <div className="journey-scene-copy-stack" aria-live={staticJourney ? undefined : "polite"} aria-atomic="true">
-              <AnimatePresence initial={false} mode="sync">
-                {(staticJourney ? scenes.map((scene, index) => ({ scene, index })) : [{ scene: scenes[activeSceneIndex], index: activeSceneIndex }]).map(({ scene, index }) => (
-      <SceneCopy key={scene.id} scene={scene} index={index} reduced={staticJourney} />
-                ))}
-              </AnimatePresence>
+              {staticJourney
+                ? scenes.map((scene, index) => <SceneCopy key={scene.id} scene={scene} index={index} />)
+                : <SceneCopy scene={scenes[activeSceneIndex]} index={activeSceneIndex} />}
             </div>
           </div>
 
@@ -144,7 +131,7 @@ function AlpineJourney() {
             </div>
             <div className="journey-visual-frame">
               {scenes.map((scene, index) => (
-                <ScenePhoto key={scene.id} scene={scene} index={index} progress={scrollYProgress} reduced={staticJourney} />
+                <ScenePhoto key={scene.id} scene={scene} index={index} active={activeSceneIndex === index} reduced={staticJourney} />
               ))}
             </div>
             <div className="journey-visual-caption"><span>Präzision, die man sieht.</span><span>Graz · Steiermark · Österreich</span></div>
