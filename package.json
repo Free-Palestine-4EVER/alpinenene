@@ -1,0 +1,25 @@
+{
+  "name": "alpine-sauber-redesign",
+  "version": "1.0.0",
+  "description": "Mobile-first Alpine Sauber website with a native iOS feel, complete service content, and Framer Motion scroll storytelling.",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/sync-static-content.mjs",
+    "dev": "vite --host 0.0.0.0",
+    "prebuild": "node scripts/sync-static-content.mjs",
+    "build": "vite build && node scripts/copy-static-assets.mjs",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "framer-motion": "^13.4.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  }
+}
