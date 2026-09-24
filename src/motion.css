@@ -322,3 +322,7 @@
   .motion-journey[data-reduced="true"] .journey-scene-copy-stack{position:relative;inset:auto;display:grid;gap:10px;min-height:0;margin:0;padding:0}
   .motion-journey[data-reduced="true"] .journey-scene-copy{position:relative;inset:auto;min-height:0}
 }
+
+/* Keep a deliberate, compact separation between the service cards and the pinned story. */
+#home-motion-story-root{padding-top:14px}
+#home-motion-story-root>.motion-journey{margin-top:0}
