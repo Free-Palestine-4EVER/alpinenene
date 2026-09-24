@@ -1667,3 +1667,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #screen-home.screen{padding-top:0}
   #screen-home .home-hero{margin-top:0}
 }
+
+/* Give the opaque white logo artwork a matching, intentional header surface. */
+.app-header{background:#fefdfd}
