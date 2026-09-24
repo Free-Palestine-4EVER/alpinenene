@@ -1670,3 +1670,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* Give the opaque white logo artwork a matching, intentional header surface. */
 .app-header{background:#fefdfd}
+
+/* Keep service details responsive to direct touch scrolling. */
+#sheet-scroll{-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scroll-behavior:auto;touch-action:pan-y pinch-zoom}
+.sheet-section-nav{position:relative;top:auto;backdrop-filter:none;-webkit-backdrop-filter:none}

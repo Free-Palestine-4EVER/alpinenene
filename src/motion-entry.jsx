@@ -64,8 +64,7 @@ function ScenePhoto({ scene, index, progress, reduced }) {
       aria-hidden="true"
       style={reduced ? { opacity: 1 } : { opacity, y, scale }}
     >
-      <img className="journey-scene-photo" src={scene.image} alt="" width="1008" height="1792" loading="lazy" decoding="async" />
-      <img className={`journey-uniform-logo journey-uniform-logo--${scene.id}`} src="/assets/alpine-sauber-logo.png" alt="" aria-hidden="true" width="951" height="443" />
+      <img className="journey-scene-photo" src={scene.image} alt="" width="1008" height="1792" loading={reduced ? "eager" : "lazy"} fetchPriority={reduced || index === 0 ? "high" : "low"} decoding="async" />
       <figcaption><span>0{index + 1} / 03</span><span>{scene.category}</span></figcaption>
     </motion.figure>
   );
@@ -94,13 +93,22 @@ function SceneCopy({ scene, index, reduced }) {
 function AlpineJourney() {
   const trackRef = useRef(null);
   const reduced = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 700px)").matches);
+  const staticJourney = reduced || isMobile;
   const [activeSceneIndex, setActiveSceneIndex] = useState(0);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 700px)");
+    const syncViewport = () => setIsMobile(query.matches);
+    query.addEventListener("change", syncViewport);
+    return () => query.removeEventListener("change", syncViewport);
+  }, []);
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: ["start start", "end end"],
   });
   const routeLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    if (staticJourney) return;
     const next = progress < 0.34 ? 0 : progress < 0.68 ? 1 : 2;
     setActiveSceneIndex((current) => current === next ? current : next);
   });
@@ -109,7 +117,7 @@ function AlpineJourney() {
     <section
       ref={trackRef}
       className="motion-journey"
-      data-reduced={reduced ? "true" : "false"}
+      data-reduced={staticJourney ? "true" : "false"}
       aria-labelledby="journey-heading"
     >
       <div className="motion-journey-sticky">
@@ -124,10 +132,10 @@ function AlpineJourney() {
             <p className="journey-overline">Zwölf Leistungen · ein Anspruch</p>
             <h2 id="journey-heading">Sauberkeit.<br /><em>In jedem Raum.</em></h2>
             <p className="journey-lede">Zuhause, im Unternehmen und überall dort, wo Sorgfalt den Unterschied macht.</p>
-            <div className="journey-scene-copy-stack" aria-live={reduced ? undefined : "polite"} aria-atomic="true">
+            <div className="journey-scene-copy-stack" aria-live={staticJourney ? undefined : "polite"} aria-atomic="true">
               <AnimatePresence initial={false} mode="sync">
-                {(reduced ? scenes.map((scene, index) => ({ scene, index })) : [{ scene: scenes[activeSceneIndex], index: activeSceneIndex }]).map(({ scene, index }) => (
-      <SceneCopy key={scene.id} scene={scene} index={index} reduced={reduced} />
+                {(staticJourney ? scenes.map((scene, index) => ({ scene, index })) : [{ scene: scenes[activeSceneIndex], index: activeSceneIndex }]).map(({ scene, index }) => (
+      <SceneCopy key={scene.id} scene={scene} index={index} reduced={staticJourney} />
                 ))}
               </AnimatePresence>
             </div>
@@ -143,11 +151,34 @@ function AlpineJourney() {
             </div>
             <div className="journey-visual-frame">
               {scenes.map((scene, index) => (
-                <ScenePhoto key={scene.id} scene={scene} index={index} progress={scrollYProgress} reduced={reduced} />
+                <ScenePhoto key={scene.id} scene={scene} index={index} progress={scrollYProgress} reduced={staticJourney} />
               ))}
             </div>
             <div className="journey-visual-caption"><span>Präzision, die man sieht.</span><span>Graz · Steiermark · Österreich</span></div>
           </div>
+        </div>
+        <div className="journey-mobile-heading">
+          <p className="journey-overline">Zwölf Leistungen · ein Anspruch</p>
+          <h2>Sauberkeit.<br /><em>In jedem Raum.</em></h2>
+          <p className="journey-lede">Zuhause, im Unternehmen und überall dort, wo Sorgfalt den Unterschied macht.</p>
+        </div>
+        <div className="journey-mobile-stories">
+          {scenes.map((scene, index) => (
+            <article className="journey-mobile-story" key={scene.id}>
+              <figure className="journey-mobile-photo">
+                <img src={scene.image} alt={scene.alt} width="1008" height="1792" loading="eager" fetchPriority={index === 0 ? "high" : "low"} decoding="async" />
+                <figcaption>0{index + 1} / 03 <span>·</span> {scene.category}</figcaption>
+              </figure>
+              <div className="journey-mobile-copy">
+                <p className="journey-scene-kicker">0{index + 1} <span>—</span> {scene.category}</p>
+                <h3>{scene.title}</h3>
+                <p>{scene.summary}</p>
+                <button className="journey-scene-link" type="button" data-service-id={scene.id}>
+                  Leistung ansehen <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+            </article>
+          ))}
         </div>
         <div className="journey-progress-track" aria-hidden="true">
           <motion.span style={{ scaleX: scrollYProgress }} />

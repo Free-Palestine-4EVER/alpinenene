@@ -230,7 +230,7 @@ function cardMarkup(service, compact = false) {
       <h3>${safe(service.title)}</h3>
       <p>${safe(service.summary || "Details gerne auf Anfrage.")}</p>
       <button class="card-link" type="button" data-service-id="${safe(service.id)}" aria-label="Mehr über ${safe(service.title)} erfahren">Mehr erfahren <span aria-hidden="true">↗</span></button>
-      <img class="card-image" src="${safe(serviceImage(service))}" alt="" loading="lazy" width="1280" height="1280" />
+      <img class="card-image" src="${safe(serviceImage(service))}" alt="" loading="${compact ? "eager" : "lazy"}" fetchpriority="${compact ? "low" : "auto"}" width="1280" height="1280" />
     </article>`;
   }
   return `<button class="service-card${compact ? " service-card-compact" : ""}" type="button" data-service-id="${safe(service.id)}" data-tint="${tintById[service.id] || "green"}" aria-label="Details zu ${safe(service.title)} ansehen">
@@ -238,7 +238,7 @@ function cardMarkup(service, compact = false) {
     <h3>${safe(service.title)}</h3>
     <p>${safe(service.summary || "Details gerne auf Anfrage.")}</p>
     <span class="card-link">Mehr erfahren <span aria-hidden="true">↗</span></span>
-    <img class="card-image" src="${safe(serviceImage(service))}" alt="" loading="lazy" width="1280" height="1280" />
+    <img class="card-image" src="${safe(serviceImage(service))}" alt="" loading="${compact ? "eager" : "lazy"}" fetchpriority="${compact ? "low" : "auto"}" width="1280" height="1280" />
   </button>`;
 }
 
@@ -358,6 +358,9 @@ function renderServiceDetail(service, trigger, options = {}) {
   document.querySelector("#sheet-category").textContent = service.category;
   document.querySelector("#sheet-category-icon").innerHTML = detailIcon(serviceIconById[service.id] || "sparkle");
   const image = document.querySelector("#sheet-image");
+  image.loading = "eager";
+  image.fetchPriority = "high";
+  image.decoding = "async";
   image.src = serviceDetailImage(service);
   image.alt = `Alpine Sauber bei der ${service.title} in einem passenden Einsatzumfeld`;
   document.querySelector("#sheet-copy").innerHTML = detailCopyMarkup(service);
