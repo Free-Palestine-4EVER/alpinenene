@@ -1714,16 +1714,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .footer-logo-link{
   display:inline-flex;
   width:min(100%,232px);
-  flex-direction:column;
   align-items:center;
-  gap:5px;
-  padding:11px 12px 9px;
-  border:1px solid rgba(255,255,255,.78);
-  border-radius:16px;
-  background:#fff;
-  box-shadow:0 8px 22px rgba(3,21,36,.14);
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  transition:opacity .2s ease,transform .2s ease;
 }
-.footer-logo-link img{width:100%;height:auto;margin:0;object-fit:contain}
+.footer-logo-link:hover{opacity:.84;transform:translateY(-2px)}
+.footer-logo-link img{display:block;width:100%;height:auto;margin:0;object-fit:contain}
 
 /* A short, cinematic brand reveal for the first page visit. */
 html.is-loading,html.is-loading body{overflow:hidden}
@@ -1822,7 +1822,7 @@ html.is-loading,html.is-loading body{overflow:hidden}
   .brand{width:min(104px,35vw);flex:0 0 min(104px,35vw)}
   .brand img{width:100%;max-height:none}
   .header-contact{align-self:center}
-  .footer-logo-link{width:min(100%,150px);gap:4px;padding:8px 8px 7px;border-radius:13px}
+  .footer-logo-link{width:min(100%,150px)}
   .loader-brand-card{width:min(100%,330px);padding:20px 23px 18px;border-radius:23px}
   .loader-logo{width:min(100%,255px)}
   .loader-status{margin-top:24px;font-size:8px;letter-spacing:.14em}
