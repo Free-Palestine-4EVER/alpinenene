@@ -1791,5 +1791,25 @@ html.is-loading,html.is-loading body{overflow:hidden}
   .brand-loader,.loader-stage,.loader-ridge-line,.loader-ridge-trail,.loader-ridge-accent,.loader-progress span{animation:none!important;transition:none!important}
 }
 
+/* Give the stacked service cards a left-right rhythm on touch-sized screens. */
+@media(max-width:700px){
+  #home-service-grid .service-card:nth-child(even){align-items:flex-end;text-align:right}
+  #home-service-grid .service-card:nth-child(even) .card-category,
+  #home-service-grid .service-card:nth-child(even) h3,
+  #home-service-grid .service-card:nth-child(even) p,
+  #home-service-grid .service-card:nth-child(even) .card-link{align-self:flex-end}
+  #home-service-grid .service-card:nth-child(even) h3,
+  #home-service-grid .service-card:nth-child(even) p{width:56%;max-width:none}
+  #home-service-grid .service-card:nth-child(even) .card-image{left:-1%;right:auto;width:55%;height:86%;object-position:left bottom}
+  #home-service-grid .service-card:nth-child(even) .card-line-art{left:-8%;right:auto;transform:translateY(-50%) scaleX(-1);transform-origin:center}
+}
+
+/* Center each cutout over the visual center of its matching SVG motif. */
+@media(max-width:700px){
+  #home-service-grid .service-card:nth-child(odd) .card-image{left:auto;right:10%;object-position:right bottom}
+  #home-service-grid .service-card:nth-child(even) .card-image{left:10%;right:auto;object-position:left bottom}
+  #home-service-grid .service-card:nth-child(even) .card-image{left:8.5%;height:94%}
+}
+
 /* Keep full-bleed sections flush with the window without a stray page scrollbar. */
 html,body{overflow-x:clip}
